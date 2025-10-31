@@ -39,7 +39,7 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           children: [
             const Text(
-              'Selamat datang di Kick Corner',
+              'Selamat datang di Kick Corner!',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 24, // Atur ukuran font
