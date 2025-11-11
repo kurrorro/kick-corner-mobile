@@ -33,7 +33,8 @@ class MyHomePage extends StatelessWidget {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         // Warna latar AppBar
-        backgroundColor: Color.fromARGB(255, 69, 54, 80),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
       ),
       drawer: LeftDrawer(),
       // Body halaman

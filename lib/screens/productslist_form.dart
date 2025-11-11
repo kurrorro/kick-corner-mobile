@@ -46,7 +46,7 @@ class _ProductsFormPageState extends State<ProductsFormPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(child: Text('Form Tambah Produk')),
-        backgroundColor: const Color.fromARGB(255, 69, 54, 80),
+        backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
       ),
       // drawer yang sudah dibuat
@@ -339,10 +339,9 @@ class _ProductsFormPageState extends State<ProductsFormPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(
-                        const Color.fromARGB(255, 167, 39, 39),
-                      ),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      foregroundColor: Colors.white,
                     ),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
