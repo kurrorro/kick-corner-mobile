@@ -118,19 +118,21 @@ Fungsionalitas ini adalah inti dari Material Design:
 
 `Navigator.pushReplacement()`: Mengganti halaman sekarang dengan halaman baru. Halaman lama dihapus dari stack, jadi tidak bisa balik lagi ke halaman sebelumnya dengan tombol *back*. **Sebaiknya digunakan** ketika alur aplikasi tidak mengizinkan pengguna untuk kembali ke halaman sebelumnya.
 
-**Perbedaan** kedua method tersebut terletak pada apa yang dilakukan kepada *route* yang berada pada atas stack. `push()` akan menambahkan *route* baru diatas *route *yang sudah ada pada atas stack, sedangkan `pushReplacement() `menggantikan *route* yang sudah ada pada atas stack dengan *route* baru tersebut.
+**Perbedaan** kedua method tersebut terletak pada apa yang dilakukan kepada *route* yang berada pada atas stack. `push()` akan menambahkan *route* baru diatas *route* yang sudah ada pada atas stack, sedangkan `pushReplacement() `menggantikan *route* yang sudah ada pada atas stack dengan *route* baru tersebut.
+
+Pada aplikasi ini, `Navigator.push()` digunakan ketika tombol *Create Product* ditekan dari grid di `MyHomePage` untuk membuka `ProductsFormPage` agar pengguna bisa kembali ke Home. Sedangkan `Navigator.pushReplacement()` digunakan pada menu `LeftDrawer` saat berpindah antara Home dan halaman Form agar halaman sebelumnya tidak menumpuk di stack.
 
 ## Bagaimana pemanfaatan hierarchy widget seperti Scaffold, AppBar, dan Drawer untuk membangun struktur halaman yang konsisten di seluruh aplikasi?
 
-`Scaffold` dipakai sebagai kerangka layout Material: memiliki `appBar`, `body`, `drawer`, dsb, supaya tampilan aplikasi konsisten.` AppBar` biasanya diletakkan di `Scaffold.appBar` sebagai bar di bagian atas, dan `Drawer` dipasang di `Scaffold.drawer` untuk menu samping.
+`Scaffold` dipakai sebagai kerangka layout Material: memiliki `appBar`, `body`, `drawer`, dsb, supaya tampilan aplikasi konsisten. `AppBar` biasanya diletakkan di `Scaffold.appBar` sebagai bar di bagian atas, dan `Drawer` dipasang di `Scaffold.drawer` untuk menu samping.
 
-Dalam *project* ini,` MyHomePage` dan `ProductsFormPage` menggunakan:
+Dalam *project* ini, `MyHomePage` dan `ProductsFormPage` menggunakan:
 ```dart
-    return Scaffold(
-        appBar: AppBar(...),
-        drawer: const LeftDrawer(),
-        body: ...
-    );
+return Scaffold(
+    appBar: AppBar(...),
+    drawer: const LeftDrawer(),
+    body: ...
+);
 ```
 **Dampaknya**:
 - Halaman bisa memiliki `AppBar` dan `Drawer` yang sama.
@@ -138,29 +140,58 @@ Dalam *project* ini,` MyHomePage` dan `ProductsFormPage` menggunakan:
 
 ## Dalam konteks desain antarmuka, apa kelebihan menggunakan layout widget seperti Padding, SingleChildScrollView, dan ListView saat menampilkan elemen-elemen form?
 
-- `Padding` digunakan untuk memberi jarak antarwidget dan dari tepi layar. **Kelebihannya**, tampilan form jadi lebih rapi dan isi teks lebih nyaman dibaca.
-- `SingleChildScrollView` membungkus satu child (seperti `Column`) agar konten bisa discroll saat melebihi tinggi layar. **Kelebihannya**, semua field form tetap bisa diakses tanpa error “bottom overflow”, bahkan di layar kecil atau saat keyboard muncul.
-- `ListView` adalah list yang otomatis *scrollable* dan efisien untuk banyak item sejenis. **Kelebihannya**, lebih praktis saat menampilkan data yang jumlahnya banyak atau dinamis.
+`Padding` digunakan untuk memberi jarak antarwidget dan dari tepi layar. **Kelebihannya**, tampilan form jadi lebih rapi dan isi teks lebih nyaman dibaca.
+
+`SingleChildScrollView` membungkus satu child (seperti `Column`) agar konten bisa discroll saat melebihi tinggi layar. **Kelebihannya**, semua field form tetap bisa diakses tanpa error “bottom overflow”, bahkan di layar kecil atau saat keyboard muncul.
+
+`ListView` adalah list yang otomatis *scrollable* dan efisien untuk banyak item sejenis. **Kelebihannya**, lebih praktis saat menampilkan data yang jumlahnya banyak atau dinamis.
 
 Contoh penggunaannya di aplikasi ini, di `ProductsFormPage:`
 ```dart
+...
 body: Form(
   key: _formKey,
   child: SingleChildScrollView(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(... TextFormField nama ...),
-        Padding(... TextFormField harga ...),
+        Padding(...),
+        Padding(...),
         ...
       ],
     ),
   ),
 );
 ```
-Pada potongan kode tersebut, `Form` digunakan sebagai wadah semua `TextFormField` agar validasi bisa dijalankan sekaligus dengan `_formKey`. Di dalamnya, `SingleChildScrollView` membuat seluruh isi form (yang berupa `Column`) bisa discroll ketika konten lebih tinggi dari layar. `Column` menyusun field secara vertikal, sedangkan setiap field dibungkus `Padding` untuk memberi jarak dari tepi layar dan antarfield sehingga tampilan form lebih rapi dan mudah dibaca.
+Pada potongan kode tersebut, `SingleChildScrollView` membuat seluruh isi form (yang berupa `Column`) bisa discroll ketika konten lebih tinggi dari layar. `Column` menyusun field secara vertikal, sedangkan setiap field dibungkus `Padding` untuk memberi jarak dari tepi layar dan antarfield sehingga tampilan form lebih rapi dan mudah dibaca.
 
-## Bagaimana penyesuaian warna tema agar aplikasi Kick Corner memiliki identitas visual yang konsisten dengan brand toko?
+## Bagaimana penyesuaian warna tema agar aplikasi memiliki identitas visual yang konsisten dengan brand toko?
 
-Menggunakan `Theme` dan `ColorScheme` supaya warna dan font konsisten di seluruh app, bukan di-*hardcode* di tiap widget.
+Menggunakan `ThemeData` dan `ColorScheme` supaya warna dan font konsisten di seluruh app, bukan di-*hardcode* di tiap widget.
+
+Pada `MyApp` didefinisikan:
+```dart
+return MaterialApp(
+    ...
+    theme: ThemeData(
+        colorScheme: colorScheme,
+        useMaterial3: true,
+    ),
+    home: MyHomePage(),
+);
+```
+```dart
+Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        ...
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
+      ),
+    )
+}
+```
+
+Penyesuaian warna tema dilakukan dengan mendefinisikan palet warna brand sekali di `ThemeData` melalui `ColorScheme` pada `MyApp`. Setelah itu, setiap halaman cukup mengambil warna dari `Theme.of(context).colorScheme` (misalnya `primary` untuk AppBar), sehingga seluruh tampilan aplikasi memiliki warna yang konsisten dan mudah diubah cukup dari satu tempat.
+
 </details>
