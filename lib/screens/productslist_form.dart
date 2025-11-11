@@ -145,7 +145,7 @@ class _ProductsFormPageState extends State<ProductsFormPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   decoration: InputDecoration(
-                    hintText: "Isi Link URL untuk Thumbnail (opsional)",
+                    hintText: "Isi Link URL untuk Thumbnail",
                     labelText: "Thumbnail",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
@@ -155,6 +155,12 @@ class _ProductsFormPageState extends State<ProductsFormPage> {
                     setState(() {
                       _thumbnail = value!;
                     });
+                  },
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return "Thumbnail tidak boleh kosong!";
+                    }
+                    return null;
                   },
                 ),
               ),
