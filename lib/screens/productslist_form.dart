@@ -106,8 +106,13 @@ class _ProductsFormPageState extends State<ProductsFormPage> {
                     if (value == null || value.isEmpty) {
                       return "Harga tidak boleh kosong!";
                     }
-                    if (int.tryParse(value) == null) {
+                    final parsed = int.tryParse(value);
+                    if (parsed == null) {
                       return "Harga harus berupa angka!";
+                    }
+
+                    if (parsed <= 0) {
+                      return "Harga harus lebih dari 0!";
                     }
                     return null;
                   },
@@ -159,6 +164,12 @@ class _ProductsFormPageState extends State<ProductsFormPage> {
                   validator: (String? value) {
                     if (value == null || value.isEmpty) {
                       return "Thumbnail tidak boleh kosong!";
+                    }
+                    final uri = Uri.tryParse(value);
+                    if (uri == null ||
+                        uri.scheme.isEmpty ||
+                        !(uri.scheme == 'http' || uri.scheme == 'https')) {
+                      return "Masukkan URL yang valid (http/https)!";
                     }
                     return null;
                   },

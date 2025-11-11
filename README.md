@@ -108,3 +108,7 @@ Fungsionalitas ini adalah inti dari Material Design:
 
 - State: State aplikasi hilang (*restart*). Ini diperlukan saat mengubah sesuatu yang fundamental, seperti `initState()` atau variabel global.
 </details>
+
+<details>
+<summary><strong>Tugas Individu 8</strong></summary>
+</details>
