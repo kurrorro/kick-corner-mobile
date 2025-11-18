@@ -1,122 +1,279 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:kick_corner/models/products_entry.dart';
+import 'package:kick_corner/screens/products_detail.dart';
+import 'package:kick_corner/screens/productslist_form.dart';
 import 'package:kick_corner/widgets/left_drawer.dart';
-import 'package:kick_corner/widgets/products_card.dart';
+import 'package:kick_corner/widgets/products_entry_card.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
-class MyHomePage extends StatelessWidget {
-  MyHomePage({super.key});
+enum ProductFilter { all, my, featured }
 
-  final List<ItemHomepage> items = [
-    ItemHomepage(
-      "All Products",
-      Icons.storefront,
-      const Color.fromARGB(255, 57, 119, 171),
-    ),
-    ItemHomepage(
-      "My Products",
-      Icons.inventory,
-      const Color.fromARGB(255, 80, 139, 82),
-    ),
-    ItemHomepage(
-      "Create Product",
-      Icons.add_shopping_cart,
-      const Color.fromARGB(255, 173, 74, 67),
-    ),
-  ];
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  ProductFilter _activeFilter = ProductFilter.all;
+
+  Future<List<ProductsEntry>> _fetchProducts(CookieRequest request) async {
+    final response = await request.get('http://localhost:8000/json/');
+    final List<ProductsEntry> list = [];
+    for (final d in response) {
+      if (d != null) {
+        list.add(ProductsEntry.fromJson(d));
+      }
+    }
+    return list;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+    final currentUserId = request.jsonData['id'];
+
     return Scaffold(
-      // AppBar bagian atas halaman
       appBar: AppBar(
-        title: const Text(
-          'Kick Corner',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        // Warna latar AppBar
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
+        title: const Text('Kick Corner'),
       ),
-      drawer: LeftDrawer(),
-      // Body halaman
+      drawer: const LeftDrawer(),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Selamat datang di Kick Corner!',
-              textAlign: TextAlign.center,
+              'Kick Corner',
               style: TextStyle(
-                fontSize: 24, // Atur ukuran font
-                fontWeight: FontWeight.bold, // Tebalkan
+                fontSize: 26,
+                fontWeight: FontWeight.w800,
               ),
             ),
+            const SizedBox(height: 4),
+            const Text(
+              'Fuel Your Football Fever!',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 16),
 
-            const SizedBox(height: 20),
+            // filter + add product
+            Row(
+              children: [
+                _buildFilterButton('All Product', ProductFilter.all),
+                const SizedBox(width: 8),
+                _buildFilterButton('My Product', ProductFilter.my),
+                const SizedBox(width: 8),
+                _buildFilterButton('Featured', ProductFilter.featured),
+                const Spacer(),
+                FilledButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const ProductsFormPage(),
+                      ),
+                    ).then((_) => setState(() {}));
+                  },
+                  icon: const Icon(Icons.add),
+                  label: const Text('Add Product'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
 
-            GridView.count(
-              primary: true,
-              padding: const EdgeInsets.all(20),
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              crossAxisCount: 3, // 3 tombol dalam satu baris
-              shrinkWrap: true,
+            Expanded(
+              child: FutureBuilder<List<ProductsEntry>>(
+                future: _fetchProducts(request),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return const Center(
+                      child: Text('Failed to load products.'),
+                    );
+                  }
 
-              // Menampilkan ItemCard untuk setiap item dalam list
-              children: items.map((ItemHomepage item) {
-                return ItemCard(item);
-              }).toList(),
+                  final allProducts = snapshot.data ?? [];
+
+                  final filtered = allProducts.where((p) {
+                    switch (_activeFilter) {
+                      case ProductFilter.all:
+                        return true;
+                      case ProductFilter.my:
+                        if (currentUserId == null) return false;
+                        return p.userId.toString() ==
+                            currentUserId.toString();
+                      case ProductFilter.featured:
+                        return p.isFeatured;
+                    }
+                  }).toList();
+
+                  if (filtered.isEmpty) {
+                    return const Center(
+                      child: Text('No product found :O'),
+                    );
+                  }
+
+                  return ListView.builder(
+                    itemCount: filtered.length,
+                    itemBuilder: (context, index) {
+                      final product = filtered[index];
+                      final isOwner = currentUserId != null &&
+                          product.userId.toString() ==
+                              currentUserId.toString();
+
+                      return ProductsEntryCard(
+                        products: product,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  ProductDetailPage(product: product),
+                            ),
+                          );
+                        },
+                        canModify: isOwner,
+                        onEdit: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ProductsFormPage(
+                                product: product,
+                                isEdit: true,
+                              ),
+                            ),
+                          ).then((_) => setState(() {}));
+                        },
+                        onDelete: () async {
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (ctx) => AlertDialog(
+                              title: const Text('Hapus produk'),
+                              content: const Text(
+                                  'Yakin ingin menghapus produk ini?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(ctx, false),
+                                  child: const Text('Batal'),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(ctx, true),
+                                  child: const Text(
+                                    'Hapus',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (confirm != true) return;
+
+                          final resp = await request.postJson(
+                            'http://localhost:8000/products/delete-flutter/${product.id}/',
+                            jsonEncode({}),
+                          );
+
+                          if (!context.mounted) return;
+
+                          if (resp['status'] == 'success') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Produk berhasil dihapus.'),
+                              ),
+                            );
+                            setState(() {});
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  resp['message'] ??
+                                      'Gagal menghapus produk.',
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),
       ),
     );
   }
+
+  Widget _buildFilterButton(String label, ProductFilter value) {
+    final isActive = _activeFilter == value;
+    return Expanded(
+      child: OutlinedButton(
+        onPressed: () {
+          setState(() {
+            _activeFilter = value;
+          });
+        },
+        style: OutlinedButton.styleFrom(
+          backgroundColor:
+              isActive ? const Color(0xFF111827) : Colors.white,
+          foregroundColor:
+              isActive ? Colors.white : const Color(0xFF111827),
+          side: BorderSide(
+            color: isActive ? const Color(0xFF111827) : Colors.grey.shade300,
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+        ),
+        child: Text(
+          label,
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+        ),
+      ),
+    );
+  }
 }
 
-class ItemHomepage {
-  final String name;
+class ItemHomePage extends StatelessWidget {
+  final String title;
   final IconData icon;
-  final Color color;
+  final VoidCallback onTap;
 
-  ItemHomepage(this.name, this.icon, this.color);
+  const ItemHomePage({
+    super.key,
+    required this.title,
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 32),
+              const SizedBox(height: 8),
+              Text(title),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
-
-// class ItemCard extends StatelessWidget {
-//   final ItemHomepage item;
-//   const ItemCard(this.item, {super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Material(
-//       color: item.color,
-//       borderRadius: BorderRadius.circular(12),
-
-//       child: InkWell(
-//         onTap: () {
-//           ScaffoldMessenger.of(context)
-//             ..hideCurrentSnackBar()
-//             ..showSnackBar(
-//               SnackBar(content: Text("Kamu telah menekan tombol ${item.name}")),
-//             );
-//         },
-//         child: Container(
-//           padding: const EdgeInsets.all(8),
-//           child: Center(
-//             child: Column(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Icon(item.icon, color: Colors.white, size: 30.0),
-//                 const Padding(padding: EdgeInsets.all(3)),
-//                 Text(
-//                   item.name,
-//                   textAlign: TextAlign.center,
-//                   style: const TextStyle(color: Colors.white),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
