@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kick_corner/screens/menu.dart';
 import 'package:kick_corner/screens/productslist_form.dart';
+import 'package:kick_corner/screens/products_entry_list.dart';
 
 class ItemCard extends StatelessWidget {
   // Menampilkan kartu dengan ikon dan nama.
@@ -19,7 +20,7 @@ class ItemCard extends StatelessWidget {
 
       child: InkWell(
         // Aksi ketika kartu ditekan.
-        onTap: () {
+        onTap: () async {
           // Menampilkan pesan SnackBar saat kartu ditekan.
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
@@ -33,6 +34,14 @@ class ItemCard extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const ProductsFormPage()),
+            );
+          }
+          else if (item.name == "All Products") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ProductsEntryListPage()
+              ),
             );
           }
         },
