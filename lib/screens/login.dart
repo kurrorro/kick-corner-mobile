@@ -26,13 +26,10 @@ class _LoginAppState extends State<LoginApp> {
     final username = _usernameController.text.trim();
     final password = _passwordController.text;
 
-    final response = await request.login(
-      "http://localhost:8000/auth/login/",
-      {
-        "username": username,
-        "password": password,
-      },
-    );
+    final response = await request.login("http://localhost:8000/auth/login/", {
+      "username": username,
+      "password": password,
+    });
 
     setState(() => _isLoading = false);
 
@@ -91,8 +88,10 @@ class _LoginAppState extends State<LoginApp> {
                 borderRadius: BorderRadius.circular(18),
               ),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 28,
+                ),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -185,9 +184,7 @@ class _LoginAppState extends State<LoginApp> {
                                 )
                               : const Text(
                                   "Sign In",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  style: TextStyle(fontWeight: FontWeight.w600),
                                 ),
                         ),
                       ),
@@ -221,7 +218,7 @@ class _LoginAppState extends State<LoginApp> {
                             ),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),

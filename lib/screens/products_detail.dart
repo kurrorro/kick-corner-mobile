@@ -30,7 +30,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     try {
       final resp = await request.postJson(
         'http://localhost:8000/products/increase-views-flutter/${_product.id}/',
-        jsonEncode({}), 
+        jsonEncode({}),
       );
 
       if (!mounted) return;
@@ -63,8 +63,18 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   String _formatDate(DateTime date) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}, '
         '${date.hour.toString().padLeft(2, '0')}:'
@@ -100,9 +110,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         _product.thumbnail != null && _product.thumbnail!.isNotEmpty;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Product Detail'),
-      ),
+      appBar: AppBar(title: const Text('Product Detail')),
       backgroundColor: const Color(0xFFF9FAFB),
       body: SingleChildScrollView(
         child: Padding(
@@ -234,8 +242,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.schedule,
-                                  size: 14, color: Colors.grey[600]),
+                              Icon(
+                                Icons.schedule,
+                                size: 14,
+                                color: Colors.grey[600],
+                              ),
                               const SizedBox(width: 4),
                               Text(
                                 _formatDate(_product.createdAt),
@@ -249,8 +260,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.visibility,
-                                  size: 14, color: Colors.grey[600]),
+                              Icon(
+                                Icons.visibility,
+                                size: 14,
+                                color: Colors.grey[600],
+                              ),
                               const SizedBox(width: 4),
                               Text(
                                 '${_product.productViews} views',
@@ -265,8 +279,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Icons.tag,
-                                    size: 14, color: Colors.grey[600]),
+                                Icon(
+                                  Icons.tag,
+                                  size: 14,
+                                  color: Colors.grey[600],
+                                ),
                                 const SizedBox(width: 4),
                                 Text(
                                   'Brand: ${_product.brand}',
@@ -280,8 +297,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.straighten,
-                                  size: 14, color: Colors.grey[600]),
+                              Icon(
+                                Icons.straighten,
+                                size: 14,
+                                color: Colors.grey[600],
+                              ),
                               const SizedBox(width: 4),
                               Text(
                                 'Size: ${_product.size}',
@@ -295,8 +315,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.inventory_2_outlined,
-                                  size: 14, color: Colors.grey[600]),
+                              Icon(
+                                Icons.inventory_2_outlined,
+                                size: 14,
+                                color: Colors.grey[600],
+                              ),
                               const SizedBox(width: 4),
                               Text(
                                 'Stock: ${_product.stock}',
@@ -326,10 +349,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       // deskripsi
                       Text(
                         _product.description,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          height: 1.6,
-                        ),
+                        style: const TextStyle(fontSize: 15, height: 1.6),
                       ),
                     ],
                   ),

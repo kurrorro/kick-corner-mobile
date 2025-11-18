@@ -25,13 +25,11 @@ class ProductsEntryCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
-      splashColor: Colors.transparent, 
-      highlightColor: Colors.transparent,  
-      hoverColor: Colors.transparent, 
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      hoverColor: Colors.transparent,
       focusColor: Colors.transparent,
-      overlayColor: WidgetStateProperty.all( 
-        Colors.transparent,
-      ),
+      overlayColor: WidgetStateProperty.all(Colors.transparent),
       child: Card(
         elevation: 0,
         margin: const EdgeInsets.only(bottom: 12),
@@ -44,7 +42,9 @@ class ProductsEntryCard extends StatelessWidget {
           children: [
             // gambar + badge
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
               child: Stack(
                 children: [
                   SizedBox(
@@ -129,18 +129,12 @@ class ProductsEntryCard extends StatelessWidget {
                     children: [
                       Text(
                         _formatDate(products.createdAt),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                       ),
                       const SizedBox(width: 8),
                       Text(
                         '•  ${products.productViews} views',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                       ),
                     ],
                   ),
@@ -157,10 +151,7 @@ class ProductsEntryCard extends StatelessWidget {
                     products.description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[700],
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.grey[700]),
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -175,10 +166,7 @@ class ProductsEntryCard extends StatelessWidget {
                       ),
                       Text(
                         'Size: ${products.size} • Stock: ${products.stock}',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 11, color: Colors.grey[600]),
                       ),
                     ],
                   ),
@@ -187,9 +175,7 @@ class ProductsEntryCard extends StatelessWidget {
                     children: [
                       TextButton(
                         onPressed: onTap,
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                        ),
+                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
                         child: const Text(
                           'View Product',
                           style: TextStyle(fontWeight: FontWeight.w500),
@@ -225,8 +211,18 @@ class ProductsEntryCard extends StatelessWidget {
 
   String _formatDate(DateTime date) {
     const months = [
-      'Jan','Feb','Mar','Apr','May','Jun',
-      'Jul','Aug','Sep','Oct','Nov','Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }

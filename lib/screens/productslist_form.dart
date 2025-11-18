@@ -11,11 +11,7 @@ class ProductsFormPage extends StatefulWidget {
   final ProductsEntry? product;
   final bool isEdit;
 
-  const ProductsFormPage({
-    super.key,
-    this.product,
-    this.isEdit = false,
-  });
+  const ProductsFormPage({super.key, this.product, this.isEdit = false});
 
   @override
   State<ProductsFormPage> createState() => _ProductsFormPageState();
@@ -105,9 +101,11 @@ class _ProductsFormPageState extends State<ProductsFormPage> {
     if (response['status'] == 'success') {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(widget.isEdit
-              ? "Produk berhasil diperbarui."
-              : "Produk berhasil ditambahkan."),
+          content: Text(
+            widget.isEdit
+                ? "Produk berhasil diperbarui."
+                : "Produk berhasil ditambahkan.",
+          ),
         ),
       );
       Navigator.pushReplacement(
@@ -133,9 +131,7 @@ class _ProductsFormPageState extends State<ProductsFormPage> {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text(
-            widget.isEdit ? 'Edit Produk' : 'Form Tambah Produk',
-          ),
+          child: Text(widget.isEdit ? 'Edit Produk' : 'Form Tambah Produk'),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
@@ -174,12 +170,9 @@ class _ProductsFormPageState extends State<ProductsFormPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
-                  initialValue:
-                      _price != null ? _price.toString() : null,
+                  initialValue: _price != null ? _price.toString() : null,
                   keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   decoration: InputDecoration(
                     hintText: "Isi Harga",
                     labelText: "Harga",
@@ -249,8 +242,7 @@ class _ProductsFormPageState extends State<ProductsFormPage> {
                     final uri = Uri.tryParse(value);
                     if (uri == null ||
                         uri.scheme.isEmpty ||
-                        !(uri.scheme == 'http' ||
-                            uri.scheme == 'https')) {
+                        !(uri.scheme == 'http' || uri.scheme == 'https')) {
                       return "Masukkan URL yang valid (http/https)!";
                     }
                     return null;
@@ -273,9 +265,7 @@ class _ProductsFormPageState extends State<ProductsFormPage> {
                       .map(
                         (cat) => DropdownMenuItem(
                           value: cat,
-                          child: Text(
-                            cat[0].toUpperCase() + cat.substring(1),
-                          ),
+                          child: Text(cat[0].toUpperCase() + cat.substring(1)),
                         ),
                       )
                       .toList(),
@@ -309,9 +299,7 @@ class _ProductsFormPageState extends State<ProductsFormPage> {
                 child: TextFormField(
                   controller: _stockController,
                   keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   decoration: InputDecoration(
                     hintText: "Isi Jumlah Stok",
                     labelText: "Stok",
@@ -330,8 +318,7 @@ class _ProductsFormPageState extends State<ProductsFormPage> {
                               final newVal = current - 1;
                               setState(() {
                                 _stock = newVal;
-                                _stockController.text =
-                                    newVal.toString();
+                                _stockController.text = newVal.toString();
                               });
                             }
                           },
@@ -344,8 +331,7 @@ class _ProductsFormPageState extends State<ProductsFormPage> {
                             final newVal = current + 1;
                             setState(() {
                               _stock = newVal;
-                              _stockController.text =
-                                  newVal.toString();
+                              _stockController.text = newVal.toString();
                             });
                           },
                         ),
@@ -422,8 +408,7 @@ class _ProductsFormPageState extends State<ProductsFormPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          Theme.of(context).colorScheme.secondary,
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
                       foregroundColor: Colors.white,
                     ),
                     onPressed: () => _submit(request),

@@ -53,10 +53,7 @@ class LeftDrawer extends StatelessWidget {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text(
-              'Logout',
-              style: TextStyle(color: Colors.red),
-            ),
+            title: const Text('Logout', style: TextStyle(color: Colors.red)),
             onTap: () async {
               await request.logout("http://localhost:8000/auth/logout/");
               if (!context.mounted) return;

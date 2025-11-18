@@ -37,9 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final currentUserId = request.jsonData['id'];
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Kick Corner'),
-      ),
+      appBar: AppBar(title: const Text('Kick Corner')),
       drawer: const LeftDrawer(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
@@ -48,18 +46,12 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             const Text(
               'Kick Corner',
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.w800,
-              ),
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 4),
             const Text(
               'Fuel Your Football Fever!',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
             const SizedBox(height: 16),
 
@@ -109,26 +101,23 @@ class _MyHomePageState extends State<MyHomePage> {
                         return true;
                       case ProductFilter.my:
                         if (currentUserId == null) return false;
-                        return p.userId.toString() ==
-                            currentUserId.toString();
+                        return p.userId.toString() == currentUserId.toString();
                       case ProductFilter.featured:
                         return p.isFeatured;
                     }
                   }).toList();
 
                   if (filtered.isEmpty) {
-                    return const Center(
-                      child: Text('No product found :O'),
-                    );
+                    return const Center(child: Text('No product found :O'));
                   }
 
                   return ListView.builder(
                     itemCount: filtered.length,
                     itemBuilder: (context, index) {
                       final product = filtered[index];
-                      final isOwner = currentUserId != null &&
-                          product.userId.toString() ==
-                              currentUserId.toString();
+                      final isOwner =
+                          currentUserId != null &&
+                          product.userId.toString() == currentUserId.toString();
 
                       return ProductsEntryCard(
                         products: product,
@@ -159,16 +148,15 @@ class _MyHomePageState extends State<MyHomePage> {
                             builder: (ctx) => AlertDialog(
                               title: const Text('Hapus produk'),
                               content: const Text(
-                                  'Yakin ingin menghapus produk ini?'),
+                                'Yakin ingin menghapus produk ini?',
+                              ),
                               actions: [
                                 TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(ctx, false),
+                                  onPressed: () => Navigator.pop(ctx, false),
                                   child: const Text('Batal'),
                                 ),
                                 TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(ctx, true),
+                                  onPressed: () => Navigator.pop(ctx, true),
                                   child: const Text(
                                     'Hapus',
                                     style: TextStyle(color: Colors.red),
@@ -198,8 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  resp['message'] ??
-                                      'Gagal menghapus produk.',
+                                  resp['message'] ?? 'Gagal menghapus produk.',
                                 ),
                               ),
                             );
@@ -227,10 +214,8 @@ class _MyHomePageState extends State<MyHomePage> {
           });
         },
         style: OutlinedButton.styleFrom(
-          backgroundColor:
-              isActive ? const Color(0xFF111827) : Colors.white,
-          foregroundColor:
-              isActive ? Colors.white : const Color(0xFF111827),
+          backgroundColor: isActive ? const Color(0xFF111827) : Colors.white,
+          foregroundColor: isActive ? Colors.white : const Color(0xFF111827),
           side: BorderSide(
             color: isActive ? const Color(0xFF111827) : Colors.grey.shade300,
           ),

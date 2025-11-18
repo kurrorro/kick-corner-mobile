@@ -95,8 +95,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 borderRadius: BorderRadius.circular(18),
               ),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 28,
+                ),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -216,9 +218,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 )
                               : const Text(
                                   "Create Account",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  style: TextStyle(fontWeight: FontWeight.w600),
                                 ),
                         ),
                       ),
@@ -252,7 +252,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),
