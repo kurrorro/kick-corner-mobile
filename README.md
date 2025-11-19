@@ -197,7 +197,7 @@ Penyesuaian warna tema dilakukan dengan mendefinisikan palet warna brand sekali 
 </details>
 
 <details>
-<summary><strong>Tugas Individu 8</strong></summary>
+<summary><strong>Tugas Individu 9</strong></summary>
 
 ## Mengapa perlu membuat model Dart saat mengambil/mengirim data JSON? Apa konsekuensinya jika langsung memetakan Map<String, dynamic> tanpa model?
 
